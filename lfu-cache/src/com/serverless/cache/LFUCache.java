@@ -12,12 +12,14 @@ public class LFUCache {
 
 	private static int INIT_CAPACITY;
 	
+	private static int pf;
+	
 	private static Map<Object, Object> cache;
 	
 	private static Map<Object, Integer> freqTracker;
 	
 	static {
-		INIT_CAPACITY = 30;
+		INIT_CAPACITY = 10;
 		cache =  new LinkedHashMap<Object, Object>(INIT_CAPACITY);
 		freqTracker = new LinkedHashMap<Object, Integer>(INIT_CAPACITY);
 	}
@@ -43,6 +45,7 @@ public class LFUCache {
 			key = func.apply("key");
 			String val = (String) get(Integer.parseInt(key));
 			response.addProperty(key, val);
+			response.addProperty("pf", pf);
 			break;
 			
 		default:
@@ -100,6 +103,7 @@ public class LFUCache {
 			freqTracker.compute(key, (k, oldVal) -> oldVal+1);
 			return cache.get(key);
 		} else {
+			pf++;
 			return null;
 		}
 	}

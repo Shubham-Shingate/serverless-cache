@@ -12,10 +12,12 @@ public class FIFOCache {
 
 	private static int INIT_CAPACITY;
 	
+	private static int pf;
+	
 	private static Map<Object, Object> cache;
 	
 	static {
-		INIT_CAPACITY = 30;
+		INIT_CAPACITY = 10;
 		cache =  new LinkedHashMap<Object, Object>(INIT_CAPACITY);
 	}
 
@@ -39,6 +41,7 @@ public class FIFOCache {
 			key = func.apply("key");
 			String val = (String) get(key);
 			response.addProperty(key, val);
+			response.addProperty("pf", pf);
 			break;
 			
 		default:
@@ -77,6 +80,7 @@ public class FIFOCache {
 		if (cache.containsKey(key)) {	
 			return cache.get(key);
 		} else {
+			pf++;
 			return null;
 		}
 	}

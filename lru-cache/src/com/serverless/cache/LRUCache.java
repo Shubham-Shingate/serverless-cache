@@ -12,10 +12,12 @@ public class LRUCache {
 
 	private static int INIT_CAPACITY;
 	
+	private static int pf;
+	
 	private static Map<Object, Object> cache;
 	
 	static {
-		INIT_CAPACITY = 20;
+		INIT_CAPACITY = 10;
 		cache =  new LinkedHashMap<Object, Object>(INIT_CAPACITY);
 	}
 	
@@ -39,6 +41,7 @@ public class LRUCache {
 			key = func.apply("key");
 			String val = (String) get(key);
 			response.addProperty(key, val);
+			response.addProperty("pf", pf);
 			break;
 			
 		default:
@@ -64,6 +67,9 @@ public class LRUCache {
 		BiPredicate<Integer, Integer> p = (size, capacity) -> (size < capacity) ? true : false;
 
 		if (p.test(cache.size(), INIT_CAPACITY)) {
+			if (cache.containsKey(key)) {
+				cache.remove(key);
+			}
 			cache.put(key, value);
 		} else { // RUN LRU EVICTION POLICY
 			Set<Entry<Object, Object>> mapSet = cache.entrySet();
@@ -80,6 +86,7 @@ public class LRUCache {
 			cache.put(key, currentValue);
 			return currentValue;
 		} else {
+			pf++;
 			return null;
 		}
 	}
